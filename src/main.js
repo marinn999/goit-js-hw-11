@@ -38,13 +38,26 @@ const loader = document.querySelector('.loader');
 formElem.addEventListener('submit', event => {
   event.preventDefault();
 
+  imagesList.innerHTML = '';
+
   const query = event.target.elements.query.value.trim();
+  if (query === '') {
+    iziToast.show({
+      message: 'The field cannot be empty!',
+      position: 'topRight',
+      backgroundColor: 'red',
+    });
+    formElem.reset();
+
+    return;
+  }
 
   searchImage(query)
     .then(data => {
       {
         if (data.hits.length === 0) {
           iziToast.show(iziToastOptions);
+          formElem.reset();
         } else {
           const markup = imagesTemplate(data.hits);
           imagesList.innerHTML = markup;
